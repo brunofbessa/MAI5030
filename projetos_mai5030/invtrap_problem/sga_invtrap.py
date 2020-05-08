@@ -15,7 +15,7 @@ def gerar_idividuo(seed_data):
 
 def fitness(individuo, data=None):
     u = sum(individuo)
-    if u < 5:
+    if u > 5:
         return 4 - u
     else:
         return 5

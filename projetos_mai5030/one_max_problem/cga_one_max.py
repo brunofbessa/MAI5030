@@ -58,9 +58,8 @@ def main(args):
 
     def run(self):
         '''
-        Para usar o pacote pyeasyga no cálculo do cga, devemos redefinir o
-        método run() do pacote implementando a atualização das distribuições de
-        probabilidade
+        Para usar o pacote pyeasyga devemos redefinir o
+        método run() do pacote implementando
         '''
 
         vetor_probabilidade = gerar_vetor_probabilidade(num_genes)

@@ -40,8 +40,8 @@ def main(args):
 
     def run(self):
         '''
-        Para usar o pacote pyeasyga no cálculo do sga de one max, devemos usar
-        a matriz de covariância
+        Para usar o pacote pyeasyga devemos redefinir o
+        método run() do pacote implementando
         '''
 
         # Primeira geração a partir do indivíduo gerado acima
