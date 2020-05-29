@@ -7,6 +7,8 @@ import seaborn as sns
 from mpl_toolkits.axes_grid1 import ImageGrid
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
+from scipy import stats
+
 
 '''
 Abaixo definimos alguns parametros globais para os testes e comparações entre
@@ -37,7 +39,7 @@ def calcular_lista_geracoes_ga(fun):
         lista_fitness_geracao = []
         for i in range(NUM_EXEC):
             args = [num_genes, CONST_TAM_POP, geracao, taxa_crossover, taxa_mutacao]
-            _fitness, _generations, _mat_cov = fun(args)
+            _fitness, _generations, _mat_cov, _ = fun(args)
             lista_fitness_geracao.append(_fitness)
             mat_cov = _mat_cov
         fitness_geracao = np.mean(lista_fitness_geracao)
@@ -64,7 +66,31 @@ def calcular_lista_populacoes_ga(fun):
         lista_mat_cov.append(mat_cov)
     return lista_fitness, lista_mat_cov
 
+def pop_ga(fun):
+    args = [num_genes, CONST_TAM_POP, CONST_MAX_GERACOES, taxa_crossover, taxa_mutacao]
+    gen_1 = fun(args)[3]
+    pop = []
+    for ind in gen_1:
+        pop += ind.genes
+    return pop
+
+def compara_dist_mannwhitneyu(pop_1, pop_2):
+	stat, p = stats.mannwhitneyu(pop_1, pop_2)
+
+	# interpret
+	alpha = 0.05
+	if p > alpha:
+		str_test = 'Mesma distribuição (não rejeita H0)'
+	else:
+		str_test = 'Distribuições diferentes (rejeita H0)'
+	print('Estatística=%.3f, p=%.3f' % (stat, p), ' ', str_test)
+
 def main():
+
+    pop_sga = pop_ga(sga_rosenbrock.main)
+    pop_cga = pop_ga(cga_rosenbrock.main)
+    print(pop_sga, pop_sga)
+    compara_dist_mannwhitneyu(pop_sga, pop_cga)
 
     fig, ax = plt.subplots(1, 2)
 
@@ -104,7 +130,6 @@ def main():
     ax[1].set_ylabel('Fitness')
     ax[1].legend()
     ax[1].set_title('Pop. X Fitness')
-    ax[1].set_title('Num. Gen. X Fitness')
 
     plt.show()
 

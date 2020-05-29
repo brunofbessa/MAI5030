@@ -15,9 +15,9 @@ def gerar_idividuo(seed_data):
 
 def fitness(individuo, data=None):
     u = sum(individuo)
-    if u > 5:
-        return 4 - u
-    else:
+    if u > 0:
+        return u - 1
+    elif u == 0:
         return 5
 
 def main(args):
@@ -69,7 +69,7 @@ def main(args):
     try:
         # somente o fitness obtido ao final do processo interessa no momento, descartando genes
         ga.run(ga)
-        return ga.best_individual()[0], ga.generations, ga.mat_cov
+        return ga.best_individual()[0], ga.generations, ga.mat_cov, ga.current_generation
     except ErroSGA:
         print('Erro na execução do SGA.')
         exit(1)

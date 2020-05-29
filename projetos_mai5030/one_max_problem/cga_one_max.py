@@ -88,7 +88,7 @@ def main(args):
     try:
         # somente o fitness obtido ao final do processo interessa no momento, descartando genes
         ga.run(ga)
-        return ga.best_individual()[0], ga.generations, ga.mat_cov
+        return ga.best_individual()[0], ga.generations, ga.mat_cov, ga.current_generation
     except ErroCGA:
         print('Erro na execução do CGA.')
         exit(1)

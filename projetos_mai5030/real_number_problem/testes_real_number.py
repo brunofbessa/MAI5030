@@ -104,7 +104,6 @@ def main():
     ax[1].set_ylabel('Fitness')
     ax[1].legend()
     ax[1].set_title('Pop. X Fitness')
-    ax[1].set_title('Num. Gen. X Fitness')
 
     plt.show()
 

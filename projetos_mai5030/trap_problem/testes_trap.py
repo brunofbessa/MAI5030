@@ -5,6 +5,7 @@ import cga_trap
 import numpy as np
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
+from scipy import stats
 
 '''
 Abaixo definimos alguns parametros globais para os testes e comparações entre
@@ -54,7 +55,30 @@ def calcular_lista_populacoes_ga(fun):
         lista_fitness.append(fitness_geracao)
     return lista_fitness
 
+def pop_ga(fun):
+    args = [num_genes, CONST_TAM_POP, CONST_MAX_GERACOES, taxa_crossover, taxa_mutacao]
+    gen_1 = fun(args)[3]
+    pop = []
+    for ind in gen_1:
+        pop += ind.genes
+    return pop
+
+def compara_dist_mannwhitneyu(pop_1, pop_2):
+	stat, p = stats.mannwhitneyu(pop_1, pop_2)
+
+	# interpret
+	alpha = 0.05
+	if p > alpha:
+		str_test = 'Mesma distribuição (não rejeita H0)'
+	else:
+		str_test = 'Distribuições diferentes (rejeita H0)'
+	print('Estatística=%.3f, p=%.3f' % (stat, p), ' ', str_test)
+
 def main():
+
+    pop_sga = pop_ga(sga_trap.main)
+    pop_cga = pop_ga(cga_trap.main)
+    compara_dist_mannwhitneyu(pop_sga, pop_cga)
 
     fig, ax = plt.subplots(1, 2)
 
