@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import pandas as pd
 
-NUM_EXEC = 1
-CONST_MAX_GERACOES = 10
+NUM_EXEC = 100
+CONST_MAX_GERACOES = 100
 CONST_TAM_POP = 50
+
 lista_tam_populacoes = [10, 25, 50, 75, 100]
 lista_num_geracoes = [25, 50, 75, 100]
 num_genes = 1
@@ -16,15 +17,17 @@ taxa_mutacao = 0.05
 f1 = []
 f2 = []
 run = []
-i = 1
-for num_geracoes in lista_num_geracoes:
-	args = [num_genes, CONST_TAM_POP, num_geracoes, taxa_crossover, taxa_mutacao]
+
+args = [num_genes, CONST_TAM_POP, CONST_MAX_GERACOES, taxa_crossover, taxa_mutacao]
+
+for exec in range(0, NUM_EXEC):
 	_f1, _f2 = nsgaii.main(args)
 	for _i in _f1:
-		run.append(i)
+		run.append(exec+1)
 	f1 += _f1
 	f2 += _f2
-	i += 1
+	print(str(exec/NUM_EXEC) + '%')
+
 
 df = pd.DataFrame()
 df['f1'] = f1
@@ -36,8 +39,4 @@ df.to_csv('nsgaii.csv', index=False)
 #print(df)
 
 
-plt.xlabel('Fun. -(x)^2')
-plt.ylabel('Fun. -(x-2)ˆ2')
-plt.scatter(f1, f2)
-print()
 #plt.show()
