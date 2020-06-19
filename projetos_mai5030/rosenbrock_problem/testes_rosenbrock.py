@@ -89,7 +89,6 @@ def main():
 
     pop_sga = pop_ga(sga_rosenbrock.main)
     pop_cga = pop_ga(cga_rosenbrock.main)
-    print(pop_sga, pop_sga)
     compara_dist_mannwhitneyu(pop_sga, pop_cga)
 
     fig, ax = plt.subplots(1, 2)

@@ -4,6 +4,7 @@ import sga_real_number
 import cga_real_number
 import numpy as np
 import seaborn as sns
+from scipy import stats
 from mpl_toolkits.axes_grid1 import ImageGrid
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
@@ -37,7 +38,7 @@ def calcular_lista_geracoes_ga(fun):
         lista_fitness_geracao = []
         for i in range(NUM_EXEC):
             args = [num_genes, CONST_TAM_POP, geracao, taxa_crossover, taxa_mutacao]
-            _fitness, _generations, _mat_cov = fun(args)
+            _fitness, _generations, _mat_cov, _ = fun(args)
             lista_fitness_geracao.append(_fitness)
             mat_cov = _mat_cov
         fitness_geracao = np.mean(lista_fitness_geracao)
@@ -56,7 +57,7 @@ def calcular_lista_populacoes_ga(fun):
         lista_fitness_geracao = []
         for i in range(NUM_EXEC):
             args = [num_genes, tam_pop, CONST_MAX_GERACOES, taxa_crossover, taxa_mutacao]
-            _fitness, _generations, _mat_cov = fun(args)
+            _fitness, _generations, _mat_cov, _ = fun(args)
             lista_fitness_geracao.append(_fitness)
             mat_cov = _mat_cov
         fitness_geracao = np.mean(lista_fitness_geracao)
@@ -64,7 +65,30 @@ def calcular_lista_populacoes_ga(fun):
         lista_mat_cov.append(mat_cov)
     return lista_fitness, lista_mat_cov
 
+def pop_ga(fun):
+    args = [num_genes, CONST_TAM_POP, CONST_MAX_GERACOES, taxa_crossover, taxa_mutacao]
+    gen_1 = fun(args)[3]
+    pop = []
+    for ind in gen_1:
+        pop += ind.genes
+    return pop
+
+def compara_dist_mannwhitneyu(pop_1, pop_2):
+	stat, p = stats.mannwhitneyu(pop_1, pop_2)
+
+	# interpret
+	alpha = 0.05
+	if p > alpha:
+		str_test = 'Mesma distribuição (não rejeita H0)'
+	else:
+		str_test = 'Distribuições diferentes (rejeita H0)'
+	print('Estatística=%.3f, p=%.3f' % (stat, p), ' ', str_test)
+
 def main():
+
+    pop_sga = pop_ga(sga_real_number.main)
+    pop_cga = pop_ga(cga_real_number.main)
+    compara_dist_mannwhitneyu(pop_sga, pop_cga)
 
     fig, ax = plt.subplots(1, 2)
 
