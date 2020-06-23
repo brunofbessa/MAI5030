@@ -133,7 +133,6 @@ def main(args):
         # Primeira geração a partir do indivíduo gerado acima
         data = [0] * num_genes
         self.seed_data = data
-#        self.create_first_generation()
         solucao = gerar_populacao(tam_pop)
 
         gen = 0
@@ -153,6 +152,7 @@ def main(args):
             while(len(solucao2) != 2*tam_pop):
                 pai1 = random.randint(0, tam_pop-1)
                 pai2 = random.randint(0, tam_pop-1)
+                # solucao2 e a forma de gerar filhos a partir de solucao utilizando pais aleatoriamente selecionados (pa11 e pai2)
                 solucao2.append(crossover(solucao[pai1], solucao[pai2], taxa_crossover, taxa_mutacao))
             valores_fitness1_2 = [fitness1(solucao2[i]) for i in range(0, 2*tam_pop)]
             valores_fitness2_2 = [fitness2(solucao2[i]) for i in range(0, 2*tam_pop)]
@@ -163,6 +163,7 @@ def main(args):
                 crowding_distance_v2.append(crowding_distance(valores_fitness1_2[:], valores_fitness2_2[:], fronteira_otimo_pareto2[i][:]))
 
             filho= []
+            # aqui selecionamos os filhos gerados em solucao2. Quantos: a quantidade de pontos na fronteira de pareto
             for i in range(0, len(fronteira_otimo_pareto2)):
                 fronteira_otimo_pareto2_1 = [retornar_indice(fronteira_otimo_pareto2[i][j],fronteira_otimo_pareto2[i] ) for j in range(0, len(fronteira_otimo_pareto2[i]))]
 
@@ -170,6 +171,7 @@ def main(args):
                 fronteira = [fronteira_otimo_pareto2[i][fronteira_aux[j]] for j in range(0, len(fronteira_otimo_pareto2[i]))]
                 fronteira.reverse()
 
+                # Popular lista de filhos para proxima geracao
                 for v in fronteira:
                     filho.append(v)
                     if(len(filho) == tam_pop):
@@ -177,11 +179,12 @@ def main(args):
                 if (len(filho) == tam_pop):
                     break
 
-
+            # Definir a nova populacao para geracao seguinte
             solucao = [solucao2[i] for i in filho]
-
+            # Proxima geração
             gen += 1
 
+        # Armazena os falores dos fitness na geracao atual. Isso será retornado na última geração
         self.valores_fitness1 = valores_fitness1
         self.valores_fitness2 = valores_fitness2
 
